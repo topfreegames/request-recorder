@@ -1,5 +1,5 @@
 // request-recorder
-// https://github.com/topfreegames/mystack-controller
+// https://github.com/topfreegames/request-recorder
 //
 // Licensed under the MIT license:
 // http://www.opensource.org/licenses/mit-license
