@@ -5,3 +5,7 @@ bin
 *.swp
 *.swo
 .*.swp
+
+# coverage files
+_build
+*.coverprofile
