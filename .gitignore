@@ -1,0 +1,7 @@
+# binary files
+bin
+
+# vim temp files
+*.swp
+*.swo
+.*.swp
