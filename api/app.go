@@ -12,6 +12,7 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"regexp"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
@@ -50,10 +51,14 @@ func (a *App) getRouter() *mux.Router {
 		Method: "requests",
 	}).Methods("GET")
 
-	r.Handle("/", &HolderHandler{
+	handler := HolderHandler{
 		App:    a,
 		Method: "record",
-	}).Methods("POST")
+	}
+	r.MatcherFunc(func(r *http.Request, rm *mux.RouteMatch) bool {
+		match, _ := regexp.MatchString("/.*", r.URL.Path)
+		return match
+	}).HandlerFunc(handler.ServeHTTP).Methods("POST")
 
 	return r
 }

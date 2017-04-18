@@ -52,14 +52,11 @@ var startCmd = &cobra.Command{
 		})
 
 		cmdL.Info("Creating application...")
-		app, err := api.NewApp(
+		app := api.NewApp(
 			host,
 			port,
 			log,
 		)
-		if err != nil {
-			cmdL.WithError(err).Fatal("Failed to start application.")
-		}
 		cmdL.Info("Application created successfully.")
 
 		cmdL.Info("Starting application...")
