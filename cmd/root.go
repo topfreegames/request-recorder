@@ -22,6 +22,8 @@ import (
 )
 
 var cfgFile string
+var host string
+var port int
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -47,4 +49,6 @@ func init() {
 		&Verbose, "verbose", "v", 2,
 		"Verbosity level => v0: Error, v1=Warning, v2=Info, v3=Debug",
 	)
+	startCmd.PersistentFlags().StringVarP(&host, "bind", "b", "0.0.0.0", "Host to bind mystack to")
+	startCmd.PersistentFlags().IntVarP(&port, "port", "p", 8080, "Port to bind mystack to")
 }

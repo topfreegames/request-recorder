@@ -21,9 +21,6 @@ import (
 	"github.com/topfreegames/request-recorder/api"
 )
 
-var host string
-var port int
-
 // startCmd represents the start command
 var startCmd = &cobra.Command{
 	Use:   "start",
@@ -72,6 +69,4 @@ var startCmd = &cobra.Command{
 
 func init() {
 	RootCmd.AddCommand(startCmd)
-	startCmd.Flags().StringVarP(&host, "bind", "b", "0.0.0.0", "Host to bind mystack to")
-	startCmd.Flags().IntVarP(&port, "port", "p", 8080, "Port to bind mystack to")
 }
