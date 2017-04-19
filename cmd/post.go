@@ -18,8 +18,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var file string
-var msg string
+var file, msg, route string
 
 // postCmd represents the post command
 var postCmd = &cobra.Command{
@@ -51,7 +50,7 @@ var postCmd = &cobra.Command{
 		w.Write(bts)
 		w.Close()
 
-		url := fmt.Sprintf("http://%s:%d", host, port)
+		url := fmt.Sprintf("http://%s:%d%s", host, port, route)
 		req, err := http.NewRequest("POST", url, &b)
 		if err != nil {
 			fmt.Println(err)
@@ -82,4 +81,5 @@ func init() {
 	RootCmd.AddCommand(postCmd)
 	postCmd.Flags().StringVarP(&file, "file", "f", "", "Path to file to be sent on POST body (set either this or msg)")
 	postCmd.Flags().StringVarP(&msg, "msg", "m", "", "Message to be sent on POST body (set either this or file)")
+	postCmd.Flags().StringVarP(&route, "route", "r", "", "Request route to execute request")
 }
