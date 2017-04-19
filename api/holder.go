@@ -18,7 +18,7 @@ type HolderHandler struct {
 	Method string
 }
 
-func (h *HolderHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h HolderHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch h.Method {
 	case "requests":
 		h.requests(w, r)
@@ -27,7 +27,7 @@ func (h *HolderHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *HolderHandler) requests(w http.ResponseWriter, r *http.Request) {
+func (h HolderHandler) requests(w http.ResponseWriter, r *http.Request) {
 	writeResponse(w, http.StatusOK, map[string]interface{}{
 		"routes": h.App.Holder,
 	})

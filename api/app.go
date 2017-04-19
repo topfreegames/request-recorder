@@ -58,7 +58,9 @@ func (a *App) getRouter() *mux.Router {
 	r.MatcherFunc(func(r *http.Request, rm *mux.RouteMatch) bool {
 		match, _ := regexp.MatchString("/.*", r.URL.Path)
 		return match
-	}).HandlerFunc(handler.ServeHTTP).Methods("POST")
+	}).HandlerFunc(
+		makeGzipHandler(handler.ServeHTTP),
+	).Methods("POST")
 
 	return r
 }
