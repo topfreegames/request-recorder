@@ -59,8 +59,7 @@ var postCmd = &cobra.Command{
 		req.Header.Add("-H", "Content-Type: application/gzip")
 
 		if len(hostHeader) != 0 {
-			header := fmt.Sprintf("Host: %s", hostHeader)
-			req.Header.Add("-H", header)
+			req.Host = hostHeader
 		}
 
 		client := &http.Client{}

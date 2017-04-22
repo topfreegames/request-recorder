@@ -26,7 +26,17 @@ var getCmd = &cobra.Command{
 		log := createLog()
 
 		url := fmt.Sprintf("http://%s:%d/requests", host, port)
-		res, err := http.Get(url)
+		req, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if len(hostHeader) != 0 {
+			req.Host = hostHeader
+		}
+
+		client := &http.Client{}
+		res, err := client.Do(req)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -55,4 +65,5 @@ var getCmd = &cobra.Command{
 
 func init() {
 	RootCmd.AddCommand(getCmd)
+	getCmd.Flags().StringVarP(&hostHeader, "hostHeader", "o", "", "Host header if it is not equal to url host")
 }
