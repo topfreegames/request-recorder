@@ -10,7 +10,6 @@ package api
 import (
 	"bytes"
 	"compress/gzip"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -35,7 +34,6 @@ func makeGzipHandler(fn http.HandlerFunc) http.HandlerFunc {
 
 		fz, err := gzip.NewReader(r.Body)
 		if err != nil {
-			fmt.Println(err)
 			writeResponse(w, http.StatusBadRequest, map[string]interface{}{
 				"error": err.Error(),
 			})

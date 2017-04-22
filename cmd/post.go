@@ -13,12 +13,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
-var file, msg, route string
+var file, msg, route, hostHeader string
 
 // postCmd represents the post command
 var postCmd = &cobra.Command{
@@ -26,9 +26,9 @@ var postCmd = &cobra.Command{
 	Short: "post helper",
 	Long:  `post helper because it is a long post request`,
 	Run: func(cmd *cobra.Command, args []string) {
+		log := createLog()
 		if len(file) == 0 && len(msg) == 0 {
-			fmt.Printf("Inform file or message")
-			os.Exit(1)
+			log.Fatal("Inform file or message")
 		}
 
 		var err error
@@ -41,8 +41,7 @@ var postCmd = &cobra.Command{
 		}
 
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			log.Fatal(err)
 		}
 
 		var b bytes.Buffer
@@ -53,27 +52,31 @@ var postCmd = &cobra.Command{
 		url := fmt.Sprintf("http://%s:%d%s", host, port, route)
 		req, err := http.NewRequest("POST", url, &b)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			log.Fatal(err)
 		}
 		req.Header.Add("-X", "POST")
 		req.Header.Add("-H", "Accept-Encoding: gzip")
 		req.Header.Add("-H", "Content-Type: application/gzip")
 
+		if len(hostHeader) != 0 {
+			header := fmt.Sprintf("Host: %s", hostHeader)
+			req.Header.Add("-H", header)
+		}
+
 		client := &http.Client{}
 		res, err := client.Do(req)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			log.Fatal(err)
 		}
 
 		bts, err = ioutil.ReadAll(res.Body)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			log.Fatal(err)
 		}
-		fmt.Println("Status:", res.StatusCode)
-		fmt.Println("Body:  ", string(bts))
+
+		log.WithFields(logrus.Fields(map[string]interface{}{
+			"Status": res.StatusCode,
+		})).Info(string(bts))
 	},
 }
 
@@ -82,4 +85,5 @@ func init() {
 	postCmd.Flags().StringVarP(&file, "file", "f", "", "Path to file to be sent on POST body (set either this or msg)")
 	postCmd.Flags().StringVarP(&msg, "msg", "m", "", "Message to be sent on POST body (set either this or file)")
 	postCmd.Flags().StringVarP(&route, "route", "r", "", "Request route to execute request")
+	postCmd.Flags().StringVarP(&hostHeader, "hostHeader", "o", "", "Host header if it is not equal to url host")
 }
